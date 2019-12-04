@@ -27,7 +27,7 @@ int main(int argc, char** argv)
 
 		in_video.retrieve(image);
 
-		GaussianBlur(image,image_copy, Size(13, 13), 0, 0);
+		//GaussianBlur(image,image_copy, Size(13, 13), 0, 0);
 		//image.copyTo(image_copy);
 
 		vector<int> ids;
