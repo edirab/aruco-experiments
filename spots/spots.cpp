@@ -12,6 +12,8 @@ int const max_value = 255;
 int const max_type = 4;
 int const max_binary_value = 255;
 
+float treshold_area = 30 * 20;
+
 string path = "../../sources/";
 string dir = "";
 string file = "led_blue.jpg";
@@ -64,35 +66,38 @@ int main(int argc, char** argv)
 	morphology_Operation(MORPH_OPEN, tresh ,tresh_opening);
 
 	//Canny(image_gray, canny_output, threshold_value-30, 255);
-	Canny(tresh, canny_output, 0, 255);
+	//Canny(tresh, canny_output, 0, 255);
+	Canny(tresh_opening, canny_output, 0, 255);
 
 	vector<vector<Point> > contours;
 
 	findContours(canny_output, contours, RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0));
 
 	vector<RotatedRect> minRect(contours.size());
-	vector<RotatedRect> minEllipse(contours.size());
+	vector<RotatedRect> realRect;
+	vector<RotatedRect> minEllipse;
 
 	for (size_t i = 0; i < contours.size(); i++)
 	{
 		minRect[i] = minAreaRect(contours[i]);
-		if (contours[i].size() > 5)
-		{
-			minEllipse[i] = fitEllipse(contours[i]);
+		if (contours[i].size() > 5 && (float(minRect[i].size.width) * float(minRect[i].size.height) > treshold_area)) {
+			realRect.push_back(minRect[i]);
+			minEllipse.push_back(fitEllipse(contours[i]));
 		}
 	}
 
 	drawing = Mat::zeros(canny_output.size(), CV_8UC3);
-	for (size_t i = 0; i < contours.size(); i++)
+
+	for (size_t i = 0; i < realRect.size(); i++)
 	{
 		Scalar color = Scalar(rng.uniform(0, 256), rng.uniform(0, 256), rng.uniform(0, 256));
 		// contour
-		drawContours(drawing, contours, (int)i, color);
+		//drawContours(drawing, contours, (int)i, color);
 		// ellipse
 		ellipse(drawing, minEllipse[i], color, 2);
 		// rotated rectangle
 		Point2f rect_points[4];
-		minRect[i].points(rect_points);
+		realRect[i].points(rect_points);
 		for (int j = 0; j < 4; j++)
 		{
 			line(drawing, rect_points[j], rect_points[(j + 1) % 4], color);
