@@ -1,4 +1,5 @@
-﻿
+﻿//https://docs.opencv.org/4.1.1/de/d62/tutorial_bounding_rotated_ellipses.html
+//https://docs.opencv.org/4.1.1/d3/dbe/tutorial_opening_closing_hats.html
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/aruco.hpp>
