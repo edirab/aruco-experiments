@@ -15,9 +15,16 @@ int const max_binary_value = 255;
 
 float treshold_area = 30 * 20;
 
+/* Example 1
+
 string path = "../../sources/";
 string dir = "";
 string file = "led_blue.jpg";
+*/
+
+string path = "../../sources/";
+string dir = "active_xs/";
+string file = "Picture .jpg";
 string full_path = path + dir + file;
 
 Mat image, image_gray, hough, tresh, tresh_opening, canny_output, drawing;
@@ -33,7 +40,10 @@ void morphology_Operation(int morph_operator, Mat& src, Mat & dst)
 
 	Mat element = getStructuringElement(morph_elem, Size(2 * morph_size + 1, 2 * morph_size + 1), Point(morph_size, morph_size));
 	morphologyEx(src, dst, morph_operator, element);
-	imshow("Morph operation", dst);
+
+	namedWindow("Morph", WINDOW_NORMAL);
+	resizeWindow("Morph", 1080, 720);
+	imshow("Morph", dst);
 }
 
 int main(int argc, char** argv)
@@ -68,7 +78,7 @@ int main(int argc, char** argv)
 
 	//Canny(image_gray, canny_output, threshold_value-30, 255);
 	//Canny(tresh, canny_output, 0, 255);
-	Canny(tresh_opening, canny_output, 0, 255);
+	Canny(tresh_opening, canny_output, 0, 255, 3);
 
 	vector<vector<Point> > contours;
 
@@ -95,7 +105,8 @@ int main(int argc, char** argv)
 		// contour
 		//drawContours(drawing, contours, (int)i, color);
 		// ellipse
-		ellipse(drawing, minEllipse[i], color, 2);
+		ellipse(drawing, minEllipse[i], color, 4);
+		ellipse(image, minEllipse[i], color, 4);
 		// rotated rectangle
 		Point2f rect_points[4];
 		realRect[i].points(rect_points);
@@ -105,12 +116,25 @@ int main(int argc, char** argv)
 		}
 	}
 
+	namedWindow("Original", WINDOW_NORMAL);
+	namedWindow("Grayscale", WINDOW_NORMAL);
+	namedWindow("Treshold", WINDOW_NORMAL);
+	namedWindow("Hough", WINDOW_NORMAL);
+	namedWindow("Canny", WINDOW_NORMAL);
+	namedWindow("Contours", WINDOW_NORMAL);
+
+	resizeWindow("Original", 1080, 720);
+	resizeWindow("Grayscale", 1080, 720);
+	resizeWindow("Treshold", 1080, 720);
+	resizeWindow("Hough", 1080, 720);
+	resizeWindow("Canny", 1080, 720);
+	resizeWindow("Contours", 1080, 720);
 
 	imshow("Original", image);
 	imshow("Grayscale", image_gray);
 	imshow("Treshold", tresh);
-	imshow("Hough Detector", hough);
-	imshow("Canny output", canny_output);
+	imshow("Hough", hough);
+	imshow("Canny", canny_output);
 	imshow("Contours", drawing);
 
 	waitKey(0);
