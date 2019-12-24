@@ -23,8 +23,8 @@ string file = "led_blue.jpg";
 */
 
 string path = "../../sources/";
-string dir = "active_xs/";
-string file = "Picture .jpg";
+string dir = "/";
+string file = "led_blue.jpg";
 string full_path = path + dir + file;
 
 Mat image, image_gray, hough, tresh, tresh_opening, canny_output, drawing;
